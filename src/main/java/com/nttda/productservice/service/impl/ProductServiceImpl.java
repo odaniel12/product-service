@@ -32,9 +32,10 @@ public class ProductServiceImpl implements ProductService {
 	return findClientById(product.getIdClient())
 			.flatMap(client -> {
 			    return validateProduct(product, client).flatMap(valProd -> {
-			        if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT) && product.getLimitCredit().equals(null)) {
-			            product.setLimitCredit(2000.0);
-				}
+					if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT) && product.getAmount().equals(null)) {
+						product.setAmount(2000.0);
+						product.setLimitCredit(2000.0);
+					}
 			        if (valProd) {
 				    return validateCreateProduct(product, client).flatMap(createProduct -> {
 					if (createProduct) {
@@ -60,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
 	return productRepository.findById(product.getId()).flatMap(prod -> {
 	    prod.setAmount(product.getAmount());
 	    prod.setTransactionAmount(product.getTransactionAmount());
+	    prod.setLimitCredit(product.getLimitCredit());
 	    return productRepository.save(prod);
 	}).switchIfEmpty(Mono.error(new Exception("Cliente no existe")));
     }
