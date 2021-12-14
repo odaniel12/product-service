@@ -19,5 +19,6 @@ public class Product{
     private String idClient;
     private Double amount;
     private Integer transactionAmount;
+    private Double limitCredit;
 
 }

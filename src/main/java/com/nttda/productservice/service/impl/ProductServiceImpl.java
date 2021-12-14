@@ -22,12 +22,19 @@ public class ProductServiceImpl implements ProductService {
 	return productRepository.findAll();
     }
 
+    @Override public Mono<Product> findByIdService(String id) {
+	return productRepository.findById(id);
+    }
+
     @Override
     public Mono<Product> saveProductService(Product product) {
 
 	return findClientById(product.getIdClient())
 			.flatMap(client -> {
 			    return validateProduct(product, client).flatMap(valProd -> {
+			        if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT) && product.getLimitCredit().equals(null)) {
+			            product.setLimitCredit(2000.0);
+				}
 			        if (valProd) {
 				    return validateCreateProduct(product, client).flatMap(createProduct -> {
 					if (createProduct) {
@@ -43,6 +50,18 @@ public class ProductServiceImpl implements ProductService {
 			    });
 			}).switchIfEmpty(Mono.error(new Exception("El cliente no existe")));
 
+    }
+
+    @Override public Flux<Product> allProductsByClient(String idClient) {
+	return productRepository.findByIdClient(idClient);
+    }
+
+    @Override public Mono<Product> updateProductService(Product product) {
+	return productRepository.findById(product.getId()).flatMap(prod -> {
+	    prod.setAmount(product.getAmount());
+	    prod.setTransactionAmount(product.getTransactionAmount());
+	    return productRepository.save(prod);
+	}).switchIfEmpty(Mono.error(new Exception("Cliente no existe")));
     }
 
     public Mono<Boolean> validateCreateProduct(Product product, Client client) {

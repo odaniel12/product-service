@@ -20,9 +20,23 @@ public class ProductController {
 	return productService.findAllService();
     }
 
+    @GetMapping("/findById/{id}")
+    public Mono<Product> findByIdController(@PathVariable("id") String id) {
+        return productService.findByIdService(id);
+    }
+
+    @GetMapping("/findByIdClient/{id}")
+    public Flux<Product> allProductsByClient(@PathVariable("id") String idClient) {
+        return productService.allProductsByClient(idClient);
+    }
+
     @PostMapping("/save")
     private Mono<Product> saveController(@RequestBody Product product) {
-
         return productService.saveProductService(product);
+    }
+
+    @PutMapping("/update")
+    private Mono<Product> updateController(@RequestBody Product product) {
+        return productService.updateProductService(product);
     }
 }

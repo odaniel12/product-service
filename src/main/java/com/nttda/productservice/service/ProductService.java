@@ -8,6 +8,12 @@ public interface ProductService {
 
     public Flux<Product> findAllService();
 
+    public Mono<Product> findByIdService(String id);
+
     public Mono<Product> saveProductService(Product product);
+
+    public Flux<Product> allProductsByClient(String idClient);
+
+    public Mono<Product> updateProductService(Product product);
 
 }
