@@ -60,8 +60,6 @@ public class ProductServiceImpl implements ProductService {
     @Override public Mono<Product> updateProductService(Product product) {
 	return productRepository.findById(product.getId()).flatMap(prod -> {
 	    prod.setAmount(product.getAmount());
-	    prod.setTransactionAmount(product.getTransactionAmount());
-	    prod.setLimitCredit(product.getLimitCredit());
 	    return productRepository.save(prod);
 	}).switchIfEmpty(Mono.error(new Exception("Cliente no existe")));
     }
