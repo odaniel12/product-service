@@ -1,6 +1,6 @@
-package com.nttda.productservice.repository;
+package com.nttdata.product.repository;
 
-import com.nttda.productservice.model.Product;
+import com.nttdata.product.model.Product;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

@@ -1,6 +1,6 @@
-package com.nttda.productservice.service;
+package com.nttdata.product.service;
 
-import com.nttda.productservice.model.Product;
+import com.nttdata.product.model.Product;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

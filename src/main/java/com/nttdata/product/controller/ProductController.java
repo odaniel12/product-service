@@ -1,10 +1,9 @@
-package com.nttda.productservice.controller;
+package com.nttdata.product.controller;
 
-import com.nttda.productservice.model.Product;
-import com.nttda.productservice.service.ProductService;
+import com.nttdata.product.model.Product;
+import com.nttdata.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

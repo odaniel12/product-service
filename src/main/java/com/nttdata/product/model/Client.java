@@ -1,4 +1,4 @@
-package com.nttda.productservice.model;
+package com.nttdata.product.model;
 
 import lombok.Data;
 

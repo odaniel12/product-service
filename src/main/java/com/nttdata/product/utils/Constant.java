@@ -1,4 +1,4 @@
-package com.nttda.productservice.utils;
+package com.nttdata.product.utils;
 
 public class Constant {
 

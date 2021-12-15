@@ -1,4 +1,4 @@
-package com.nttda.productservice;
+package com.nttdata.product;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

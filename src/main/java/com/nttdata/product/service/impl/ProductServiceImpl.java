@@ -1,10 +1,10 @@
-package com.nttda.productservice.service.impl;
+package com.nttdata.product.service.impl;
 
-import com.nttda.productservice.model.Client;
-import com.nttda.productservice.model.Product;
-import com.nttda.productservice.repository.ProductRepository;
-import com.nttda.productservice.service.ProductService;
-import com.nttda.productservice.utils.Constant;
+import com.nttdata.product.model.Client;
+import com.nttdata.product.model.Product;
+import com.nttdata.product.repository.ProductRepository;
+import com.nttdata.product.service.ProductService;
+import com.nttdata.product.utils.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -32,7 +32,8 @@ public class ProductServiceImpl implements ProductService {
 	return findClientById(product.getIdClient())
 			.flatMap(client -> {
 			    return validateProduct(product, client).flatMap(valProd -> {
-					if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT) && product.getAmount().equals(null)) {
+					if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT)
+							&& product.getAmount().equals(null)) {
 						product.setAmount(2000.0);
 						product.setLimitCredit(2000.0);
 					}
@@ -69,29 +70,43 @@ public class ProductServiceImpl implements ProductService {
         if (client.getTypeClient().equals(Constant.TYPE_CLIENT_PERSONAL)) {
             if (product.getNameProduct().equals(Constant.NAME_PRODUCT_ACCOUNT)) {
                 if (product.getTypeProduct().equals(Constant.TYPE_PRODUCT_VIP)) {
-                    return productRepository.countByIdClientAndNameProductAndTypeProduct(client.getIdClient(), Constant.NAME_PRODUCT_CREDIT, Constant.TYPE_PRODUCT_CREDIT_CARD)
+                    return productRepository.countByIdClientAndNameProductAndTypeProduct(
+                    		client.getIdClient(),
+							Constant.NAME_PRODUCT_CREDIT,
+							Constant.TYPE_PRODUCT_CREDIT_CARD)
 				    .flatMap(cant -> {
 					System.out.println("cant: "+cant);
 				       if (cant>0) {
 				           return Mono.just(true);
 				       }else {
-					   return Mono.error(new Exception("No puede obtener la cuenta de ahorros VIP, tiene que tener un tarjeta de credito"));
+					   return Mono.error(
+					   		new Exception("No puede obtener la cuenta de ahorros VIP, tiene que tener un tarjeta de credito"));
 				       }
 				    });
 		}
-		return productRepository.existsByNameProductAndTypeProductAndIdClient(product.getNameProduct(), product.getTypeProduct(), product.getIdClient())
+		return productRepository.existsByNameProductAndTypeProductAndIdClient(
+				product.getNameProduct(),
+				product.getTypeProduct(),
+				product.getIdClient())
 				.flatMap(value -> {
 				    if (value) {
-					return Mono.error(new Exception("El cliente PERSONAL ya tiene una "+product.getNameProduct()+ " de tipo " + product.getTypeProduct()));
+					return Mono.error(new Exception("El cliente PERSONAL ya tiene una "
+							+ product.getNameProduct()+ " de tipo "
+							+ product.getTypeProduct()));
 				    }else {
 					return Mono.just(true);
 				    }
 				});
-	    }else if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT) && product.getTypeProduct().equals(Constant.TYPE_PRODUCT_PERSONAL)) {
-		return productRepository.existsByNameProductAndTypeProductAndIdClient(product.getNameProduct(), product.getTypeProduct(), product.getIdClient())
+	    }else if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT)
+					&& product.getTypeProduct().equals(Constant.TYPE_PRODUCT_PERSONAL)) {
+		return productRepository.existsByNameProductAndTypeProductAndIdClient(
+				product.getNameProduct(),
+				product.getTypeProduct(),
+				product.getIdClient())
 				.flatMap(value -> {
 				   if (value) {
-				       return Mono.error(new Exception("El cliente PERSONAL no puede tener mas de 1 credito Personal"));
+				       return Mono.error(
+				       		new Exception("El cliente PERSONAL no puede tener mas de 1 credito Personal"));
 				   }else {
 				       return Mono.just(true);
 				   }
@@ -102,12 +117,16 @@ public class ProductServiceImpl implements ProductService {
         if (client.getTypeClient().equals(Constant.TYPE_CLIENT_BUSINESS)) {
 	    if (product.getNameProduct().equals(Constant.NAME_PRODUCT_ACCOUNT)) {
 	        if (product.getTypeProduct().equals(Constant.TYPE_PRODUCT_PYME)) {
-		    return productRepository.countByIdClientAndNameProductAndTypeProduct(client.getIdClient(), Constant.NAME_PRODUCT_CREDIT, Constant.TYPE_PRODUCT_CREDIT_CARD)
+		    return productRepository.countByIdClientAndNameProductAndTypeProduct(
+		    		client.getIdClient(),
+					Constant.NAME_PRODUCT_CREDIT,
+					Constant.TYPE_PRODUCT_CREDIT_CARD)
 				    .flatMap(cant -> {
 					if (cant>0) {
 					    return Mono.just(true);
 					}else {
-					    return Mono.error(new Exception("No puede obtener la cuenta de corriente PYME, tiene que tener un tarjeta de credito"));
+					    return Mono.error(
+					    		new Exception("No puede obtener la cuenta de corriente PYME, tiene que tener un tarjeta de credito"));
 					}
 				    });
 		}
@@ -139,7 +158,10 @@ public class ProductServiceImpl implements ProductService {
 		}
 	    }
 	    if (validate.equals(false)) {
-	        return Mono.error(new Exception("El cliente de es de tipo " + client.getTypeClient() + " y no puede guardar un(a) " + product.getNameProduct() + " de tipo " + product.getTypeProduct()));
+	        return Mono.error(
+	        		new Exception("El cliente de es de tipo " + client.getTypeClient()
+							+ " y no puede guardar un(a) " + product.getNameProduct()
+							+ " de tipo " + product.getTypeProduct()));
 	    }
 	}else if (product.getNameProduct().equals(Constant.NAME_PRODUCT_CREDIT)) {
 	    if (client.getTypeClient().equals(Constant.TYPE_CLIENT_PERSONAL)) {
@@ -158,7 +180,9 @@ public class ProductServiceImpl implements ProductService {
 		}
 	    }
 	    if (validate.equals(false)) {
-		return Mono.error(new Exception("El cliente de es de tipo " + client.getTypeClient() + " y no puede guardar un(a) " + product.getNameProduct() + " de tipo " + product.getTypeProduct()));
+		return Mono.error(new Exception("El cliente de es de tipo " + client.getTypeClient()
+				+ " y no puede guardar un(a) " + product.getNameProduct()
+				+ " de tipo " + product.getTypeProduct()));
 	    }
 	}else {
 	    return Mono.error(new Exception("Nombre de producto no encontrado"));
@@ -169,7 +193,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Mono<Client> findClientById(String id) {
 
-	String url = "http://localhost:8080/clientBank/findClient/" + id;
+	String url = "http://localhost:8080/client/findClient/" + id;
 
 	return WebClient.create()
 			.get()
